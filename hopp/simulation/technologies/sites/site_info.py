@@ -1,6 +1,10 @@
+from pathlib import Path
+from typing import Optional, Union
+
 import matplotlib.pyplot as plt
-from shapely.geometry import *
-from shapely.geometry.base import *
+import numpy as np
+from shapely.geometry import Polygon, Point
+from shapely.geometry.base import BaseGeometry
 from attrs import define, field
 
 from hopp.simulation.base import BaseClass
@@ -34,7 +38,7 @@ class SiteInfo(BaseClass):
         dictionary of initialization data
     lat : float
         site latitude [decimal degrees]
-    long : float
+    lon : float
         site longitude [decimal degrees]
     vertices : np.array
         site boundary vertices [m]
@@ -64,9 +68,9 @@ class SiteInfo(BaseClass):
         ``True`` if a desired schedule was provided, ``False`` otherwise
     """
     data: dict = field(converter=dict)
-    solar_resource_file: str = field(default="", converter=resource_file_converter)
-    wind_resource_file: str = field(default="", converter=resource_file_converter)
-    grid_resource_file: str = field(default="", converter=resource_file_converter)
+    solar_resource_file: Union[str, Path] = field(default="", converter=resource_file_converter)
+    wind_resource_file: Union[str, Path] = field(default="", converter=resource_file_converter)
+    grid_resource_file: Union[str, Path] = field(default="", converter=resource_file_converter)
     hub_height: float = field(default=97.)
     capacity_hours: list = field(default=[])
     desired_schedule: list = field(default=[])
@@ -76,13 +80,13 @@ class SiteInfo(BaseClass):
     valid_region = field(init=False)
     lat: NDArrayFloat = field(init=False)
     lon: NDArrayFloat = field(init=False)
-    solar_resource: SolarResource = field(init=False)
+    solar_resource: SolarResource = field(init=False, default=None)
     n_timesteps: int = field(init=False)
-    wind_resource: WindResource = field(init=False)
+    wind_resource: WindResource = field(init=False, default=None)
     elec_prices: ElectricityPrices = field(init=False)
     n_periods_per_day: int = field(init=False)
     interval: int = field(init=False)
-    urdb_label: str | None = field(init=False)
+    urdb_label: Optional[str] = field(init=False)
     follow_desired_schedule: bool = field(init=False)
 
     def __attrs_post_init__(self) -> None:
@@ -119,9 +123,6 @@ class SiteInfo(BaseClass):
             self.vertices = np.array([np.array(v) for v in self.data['site_boundaries']['verts']])
             self.polygon: Polygon = Polygon(self.vertices)
             self.valid_region = self.polygon.buffer(1e-8)
-        if 'kml_file' in self.data:
-            self.kml_data, self.polygon, self.data['lat'], self.data['lon'] = self.kml_read(self.data['kml_file'])
-            self.polygon = self.polygon.buffer(1e-8)
         if 'lat' not in self.data or 'lon' not in self.data:
             raise ValueError("SiteInfo requires lat and lon")
         self.lat = self.data['lat']
@@ -157,7 +158,6 @@ class SiteInfo(BaseClass):
             self.capacity_hours = [False] * self.n_timesteps
 
         # Desired load schedule for the system to dispatch against
-        self.desired_schedule = self.desired_schedule
         self.follow_desired_schedule = len(self.desired_schedule) == self.n_timesteps
 
             # FIXME: this a hack

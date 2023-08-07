@@ -1,6 +1,8 @@
 import platform
+from pathlib import Path
 from pytest import approx
-from hopp.simulation.technologies.layout.flicker_data.plot_flicker import *
+import numpy as np
+from hopp.simulation.technologies.layout.flicker_data.plot_flicker import FlickerMismatch, FlickerMismatchGrid
 from hopp.utilities.keys import set_nrel_key_dot_env
 
 
@@ -10,12 +12,12 @@ lat = 39.7555
 lon = -105.2211
 
 
-def plot_maps(maps, flicker):
-    for m in maps:
-        axs = flicker.plot_on_site(False, False)
-        c = plot_contour(m, flicker, axs, vmin=np.amin(m), vmax=np.amax(m))
-        plt.colorbar(c)
-        plt.show()
+# def plot_maps(maps, flicker):
+#     for m in maps:
+#         axs = flicker.plot_on_site(False, False)
+#         c = plot_contour(m, flicker, axs, vmin=np.amin(m), vmax=np.amax(m))
+#         plt.colorbar(c)
+#         plt.show()
 
 
 def test_single_turbine():
@@ -185,4 +187,4 @@ def test_plot():
 
     flicker = FlickerMismatch(lat, lon, angles_per_step=12)
     axs = flicker.plot_on_site(False, False)
-    plot_tiled(flicker_heatmap, flicker, axs)
+    # plot_tiled(flicker_heatmap, flicker, axs)

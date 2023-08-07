@@ -1,4 +1,4 @@
-from multiprocessing import Pool, cpu_count
+from multiprocessing_on_dill import Pool, cpu_count
 from typing import (
     Callable,
     Tuple,
@@ -7,7 +7,7 @@ from typing import (
 from ..data_logging.data_recorder import DataRecorder
 from ..driver.ask_tell_driver import AskTellDriver
 from ..optimizer.ask_tell_optimizer import AskTellOptimizer
-from .ask_tell_parallel_driver_fns import *
+from .ask_tell_parallel_driver_fns import make_initializer, evaluate
 
 
 class AskTellParallelDriver(AskTellDriver):
