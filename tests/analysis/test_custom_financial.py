@@ -59,8 +59,8 @@ def test_custom_financial():
 
 def test_detailed_pv(site):
     # Run detailed PV model (pvsamv1) using a custom financial model
-    annual_energy_expected = 108829776
-    npv_expected = -39094719
+    annual_energy_expected = 108239401
+    npv_expected = -39144853
 
     pvsamv1_defaults_file = Path(__file__).absolute().parent.parent / "hybrid/pvsamv1_basic_params.json"
     with open(pvsamv1_defaults_file, 'r') as f:
@@ -132,12 +132,12 @@ def test_detailed_pv(site):
 
 def test_hybrid_simple_pv_with_wind(site):
     # Run wind + simple PV (pvwattsv8) hybrid plant with custom financial model
-    annual_energy_expected_pv = 98792572
-    annual_energy_expected_wind = 32492414
-    annual_energy_expected_hybrid = 131284986
-    npv_expected_pv = -39914031
-    npv_expected_wind = -11880595
-    npv_expected_hybrid = -51794626
+    annual_energy_expected_pv = 98821626
+    annual_energy_expected_wind = 33637984
+    annual_energy_expected_hybrid = 132459610
+    npv_expected_pv = -39911660
+    npv_expected_wind = -11786833
+    npv_expected_hybrid = -51698493
 
     interconnect_kw = 150e6
     pv_kw = 50000
@@ -194,12 +194,12 @@ def test_hybrid_simple_pv_with_wind(site):
 
 def test_hybrid_detailed_pv_with_wind(site):
     # Test wind + detailed PV (pvsamv1) hybrid plant with custom financial model
-    annual_energy_expected_pv = 21590086
-    annual_energy_expected_wind = 32492414
-    annual_energy_expected_hybrid = 54082500
-    npv_expected_pv = -7833348
-    npv_expected_wind = -11880595
-    npv_expected_hybrid = -19713943
+    annual_energy_expected_pv = 21500708
+    annual_energy_expected_wind = 33637984
+    annual_energy_expected_hybrid = 55138692
+    npv_expected_pv = -7840663
+    npv_expected_wind = -11786833
+    npv_expected_hybrid = -19627496
 
     interconnect_kw = 150e6
     wind_kw = 10000
@@ -276,14 +276,14 @@ def test_hybrid_detailed_pv_with_wind(site):
 
 def test_hybrid_simple_pv_with_wind_storage_dispatch(site):
     # Test wind + simple PV (pvwattsv8) + storage with dispatch hybrid plant with custom financial model
-    annual_energy_expected_pv = 9879371
-    annual_energy_expected_wind = 32492414
-    annual_energy_expected_battery = -31197
-    annual_energy_expected_hybrid = 42340587
-    npv_expected_pv = -1899148
-    npv_expected_wind = -5000659
-    npv_expected_battery = -8163411
-    npv_expected_hybrid = -15063967
+    annual_energy_expected_pv = 9882421
+    annual_energy_expected_wind = 33637983
+    annual_energy_expected_battery = -31287
+    annual_energy_expected_hybrid = 43489117
+    npv_expected_pv = -1898253
+    npv_expected_wind = -4664335
+    npv_expected_battery = -8163435
+    npv_expected_hybrid = -14726773
 
     interconnect_kw = 15000
     pv_kw = 5000
@@ -346,14 +346,14 @@ def test_hybrid_simple_pv_with_wind_storage_dispatch(site):
 
 def test_hybrid_detailed_pv_with_wind_storage_dispatch(site):
     # Test wind + detailed PV (pvsamv1) + storage with dispatch hybrid plant with custom financial model
-    annual_energy_expected_pv = 20463359
-    annual_energy_expected_wind = 32492414
-    annual_energy_expected_battery = -30558
-    annual_energy_expected_hybrid = 52924846
-    npv_expected_pv = -3592661
-    npv_expected_wind = -5000659
-    npv_expected_battery = -8163239
-    npv_expected_hybrid = -16757400
+    annual_energy_expected_pv = 20413333
+    annual_energy_expected_wind = 33637984
+    annual_energy_expected_battery = -30147
+    annual_energy_expected_hybrid = 54020819
+    npv_expected_pv = -3607348
+    npv_expected_wind = -4664335
+    npv_expected_battery = -8163128
+    npv_expected_hybrid = -16435636
 
     interconnect_kw = 15000
     wind_kw = 10000
