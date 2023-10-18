@@ -7,13 +7,20 @@ from attrs import define, field
 
 from hopp.simulation.base import BaseClass
 from hopp.utilities.validators import gt_zero, contains
-from hopp.simulation.technologies.wind.floris import Floris
+from hopp.simulation.technologies.wind import Floris, PySAMWind
 from hopp.simulation.technologies.power_source import PowerSource
 from hopp.simulation.technologies.sites import SiteInfo
 from hopp.simulation.technologies.layout.wind_layout import WindLayout, WindBoundaryGridParameters
 from hopp.simulation.technologies.financial import CustomFinancialModel
 from hopp.utilities.log import hybrid_logger as logger
 
+
+MODEL_MAP = {
+    "wind_simulation_model": {
+        "pysam": PySAMWind,
+        "floris": Floris,
+    },
+}
 
 @define
 class WindConfig(BaseClass):
@@ -45,10 +52,14 @@ class WindConfig(BaseClass):
     hub_height: Optional[float] = field(default=None)
     layout_mode: str = field(default="grid", validator=contains(["boundarygrid", "grid"]))
     model_name: str = field(default="pysam", validator=contains(["pysam", "floris"]))
+    model_input_file: str = field(default="")
+    pysam_config_name: str = field(init=False, default="WindPowerSingleOwner")
     rating_range_kw: Tuple[int, int] = field(default=(1000, 3000))
     floris_config: Optional[Union[dict, str, Path]] = field(default=None)
     timestep: Optional[Tuple[int, int]] = field(default=None)
-    fin_model: Optional[Union[dict, Singleowner.Singleowner, CustomFinancialModel]] = field(default=None)
+    fin_model: Optional[Union[str, dict, Singleowner.Singleowner, CustomFinancialModel]] = field(
+        default="WindPowerSingleOwner"
+    )
 
     # converted
     fin_model_inst: Optional[Union[Singleowner.Singleowner, CustomFinancialModel]] = field(init=False)
@@ -78,7 +89,6 @@ class WindPlant(PowerSource):
     site: SiteInfo
     config: WindConfig
 
-    config_name: str = field(init=False, default="WindPowerSingleOwner")
     _rating_range_kw: Tuple[int, int] = field(init=False)
 
     def __attrs_post_init__(self):
@@ -91,16 +101,15 @@ class WindPlant(PowerSource):
         """
         self._rating_range_kw = self.config.rating_range_kw
 
-        if self.config.model_name == 'floris':
-            print('FLORIS is the system model...')
-            system_model = Floris(self.site, self.config)
-            financial_model = Singleowner.default(self.config_name)
-        else:
-            system_model = Windpower.default(self.config_name)
-            financial_model = Singleowner.from_existing(system_model, self.config_name)
+        wind_simulation_model_string = self.config.model_name.lower()
+        model = MODEL_MAP["wind_simulation_model"][wind_simulation_model_string]
+        system_model = model(self.site, self.config, timestep=self.config.timestep)
 
-        if self.config.fin_model_inst is not None:
-            financial_model = self.import_financial_model(self.config.fin_model_inst, system_model, self.config_name)
+        financial_model = self.import_financial_model(
+            self.config.fin_model_inst,
+            system_model.system_model,
+            self.config.pysam_config_name
+        )
 
         super().__init__("WindPlant", self.site, system_model, financial_model)
         self._system_model.value("wind_resource_data", self.site.wind_resource.data)
