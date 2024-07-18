@@ -38,6 +38,9 @@ def site():
 
 def test_site_init(site):
     """Site should initialize properly."""
+    print(site)
+    print(flatirons_site["year"])
+    lkj
     assert site is not None
 
     # data
