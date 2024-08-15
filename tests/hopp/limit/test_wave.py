@@ -48,7 +48,7 @@ def site():
 
 @fixture
 def mhk_config():
-	mhk_yaml_path = Path(__file__).absolute().parent.parent.parent / "tests" / "hopp" / "inputs" / "wave" / "wave_device.yaml"
+	mhk_yaml_path = Path(ROOT_DIR).parent / "tests" / "hopp" / "inputs" / "wave" / "wave_device.yaml"
 	mhk_config = load_yaml(mhk_yaml_path)
 
 	return mhk_config
