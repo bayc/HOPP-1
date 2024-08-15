@@ -552,7 +552,7 @@ def test_detailed_pv_system_capacity(hybrid_config, subtests):
         "Detailed PV model (pvsamv1) using parameters from file except the top level system_capacity_kw parameter"
     ):
         pvsamv1_defaults_file = (
-            Path(__file__).absolute().parent / "pvsamv1_basic_params.json"
+            ROOT_DIR.parent / "tests/hopp/pvsamv1_basic_params.json"
         )
         with open(pvsamv1_defaults_file, "r") as f:
             tech_config = json.load(f)
@@ -574,7 +574,7 @@ def test_detailed_pv_system_capacity(hybrid_config, subtests):
         annual_energy_expected = 8955045
         npv_expected = -2622684
         pvsamv1_defaults_file = (
-            Path(__file__).absolute().parent / "pvsamv1_basic_params.json"
+            ROOT_DIR.parent / "tests/hopp/pvsamv1_basic_params.json"
         )
         with open(pvsamv1_defaults_file, "r") as f:
             tech_config = json.load(f)
@@ -639,7 +639,7 @@ def test_hybrid_detailed_pv_only(site, hybrid_config, subtests):
         annual_energy_expected = 102997528
         npv_expected = -25049424
         pvsamv1_defaults_file = (
-            Path(__file__).absolute().parent / "pvsamv1_basic_params.json"
+            ROOT_DIR.parent / "tests/hopp/pvsamv1_basic_params.json"
         )
         with open(pvsamv1_defaults_file, "r") as f:
             tech_config = json.load(f)
@@ -688,7 +688,7 @@ def test_hybrid_detailed_pv_only(site, hybrid_config, subtests):
         annual_energy_expected = 102319358
         npv_expected = -25110524
         pvsamv1_defaults_file = (
-            Path(__file__).absolute().parent / "pvsamv1_basic_params.json"
+            ROOT_DIR.parent / "tests/hopp/pvsamv1_basic_params.json"
         )
         with open(pvsamv1_defaults_file, "r") as f:
             tech_config = json.load(f)
